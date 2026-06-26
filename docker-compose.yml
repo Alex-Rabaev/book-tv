@@ -1,0 +1,33 @@
+# Local development stack for book-tv.
+# Postgres is provided so `alembic upgrade head` and the API can run end-to-end.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: book
+      POSTGRES_PASSWORD: book
+      POSTGRES_DB: booktv
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U book -d booktv"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ./backend
+    env_file: .env
+    environment:
+      # Override the DB host to the compose service name.
+      DATABASE_URL: postgresql+asyncpg://book:book@db:5432/booktv
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata:
