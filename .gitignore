@@ -70,6 +70,22 @@ coverage/
 .nyc_output/
 
 # ---------------------------------------------
+# Python (backend)
+# ---------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# ---------------------------------------------
+# TypeScript build info
+# ---------------------------------------------
+*.tsbuildinfo
+
+# ---------------------------------------------
 # BMAD framework (Breakthrough Method of Agile AI-Driven Development)
 # ---------------------------------------------
 _bmad/
