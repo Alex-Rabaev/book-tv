@@ -6,13 +6,17 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.health import router as health_router
 from app.core.config import get_settings
-from app.core.db import get_engine
+from app.core.db import get_engine, get_sessionmaker
 from app.core.logging import configure_logging
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     configure_logging()
+    # Initialize the async engine and session factory at startup (AD-7).
+    # create_async_engine does not open a connection here, so startup needs no live DB.
+    get_engine()
+    get_sessionmaker()
     yield
     await get_engine().dispose()
 
